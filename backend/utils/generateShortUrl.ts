@@ -1,30 +1,37 @@
 import Url from "../models/Url";
-import { Schema } from "mongoose";
+import { Types } from "mongoose";
 import { generateRandomWord } from "./generateRandomWord";
 
 const generateShortUrl = async (
   originalUrl: string,
   customAlias?: string,
-  userId?: Schema.Types.ObjectId
+  userId?: Types.ObjectId | string
 ): Promise<string> => {
   let shortUrl: string;
+
+  if (userId && typeof userId === "string") {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new Error("Invalid userId");
+    }
+    userId = new Types.ObjectId(userId);
+  }
 
   if (customAlias) {
     // Validate custom alias
     const invalidAlias = /[^\w\d-\/]+/g;
     if (invalidAlias.test(customAlias)) {
-      return "Invalid alias. Allowed characters: letters, numbers, '-', and '_'.";
+      throw new Error("Invalid alias. Allowed characters: letters, numbers, '-', and '_'.");
     }
 
     // Check if alias is already taken
     const existingUrl = await Url.findOne({ shortUrl: customAlias });
     if (existingUrl) {
-      return "Custom alias already taken. Please choose another one.";
+      throw new Error("Custom alias already taken. Please choose another one.");
     }
 
     shortUrl = customAlias;
   } else {
-    // generate a short url 
+    // Generate a short url
     shortUrl = generateRandomWord();
     const existingUrl = await Url.findOne({ shortUrl });
     if (existingUrl) {
@@ -32,12 +39,12 @@ const generateShortUrl = async (
     }
   }
 
-  // if there is no userId provided (guest mode), return URL without saving
+  // If no userId (guest mode), return URL without saving
   if (!userId) {
     return shortUrl;
   }
 
-  // If the user is logged in, save the url in the database
+  // If user is logged in, save URL in the database
   const newShortUrl = new Url({
     originalUrl,
     shortUrl,
