@@ -1,9 +1,10 @@
 import express from "express";
 import shortenRoutes from "./routes/shortenRoutes";
+import "./setup/connectDB";
 
 const app = express();
-app.use("/api/shorten", shortenRoutes);
 app.use(express.json());
+app.use("/api/shorten", shortenRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to our URL Shortening service 🚀" });
