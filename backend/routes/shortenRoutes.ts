@@ -8,9 +8,7 @@ const router = express.Router();
 // Method	Route	Description
 // POST	/api/shorten	Create a short URL (Guest mode: not saved)
 router.post("/", validateUrl, (req: Request, res: Response) => {
-  const { originalUrl } = req.body;
-  const customAlias = req.query["customAlias"];
-
+  const { originalUrl, customAlias } = req.body;
   let shortUrl: string = generateRandomWord();
 
   if (typeof customAlias === "string" && customAlias.trim()) {
