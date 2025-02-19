@@ -10,7 +10,7 @@ export interface IUrl extends Document {
 
 const urlSchema = new Schema<IUrl>(
   {
-    originalUrl: { type: String, required: true },
+    originalUrl: { type: String, required: true, unique: true },
     shortUrl: { type: String, required: true, unique: true },
     user: { type: Schema.Types.ObjectId, ref: "User" },
     clicks: { type: Number, default: 0 },
