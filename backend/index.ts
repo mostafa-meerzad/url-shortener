@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import "./startup/connectToDB";
 import { auth } from "./routes/auth";
+import { shorten } from "./routes/shorten";
 
 const app = express();
 app.use(express.json());
@@ -14,7 +15,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use("/api/auth", auth);
-
+app.use("/api/shorten", shorten)
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to user URL Shortening service 🚀" });
   return;
