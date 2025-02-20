@@ -19,6 +19,6 @@ const urlSchema = new Schema<IUrl>(
   { timestamps: true }
 );
 
-const User = model<IUrl>("Url", urlSchema);
+const Url = model<IUrl>("Url", urlSchema);
 
-export default User;
+export default Url;
