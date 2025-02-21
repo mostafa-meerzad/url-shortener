@@ -31,40 +31,44 @@ router.post("shorten/guest", (req, res) => {
   res.status(200).json({ originalUrl, short });
 });
 
-router.post("shorten/", authMiddleware, async (req: AuthRequest, res: Response) => {
-  try {
-    const parsedData = urlSchema.safeParse(req.body);
+router.post(
+  "shorten/",
+  authMiddleware,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const parsedData = urlSchema.safeParse(req.body);
 
-    if (!parsedData.success) {
-      res.status(400).json(parsedData.error.flatten());
+      if (!parsedData.success) {
+        res.status(400).json(parsedData.error.flatten());
+        return;
+      }
+
+      const { originalUrl, customAlias } = parsedData.data;
+      const userId = req.user?.userId;
+
+      if (await Url.exists({ user: userId, originalUrl })) {
+        res.status(409).json({ error: "URL alias already in use" });
+        return;
+      }
+
+      let shortUrl = customAlias || generateRandomWord();
+
+      while (await Url.exists({ user: userId, shortUrl })) {
+        shortUrl = generateRandomWord();
+      }
+
+      const newUrl = new Url({ originalUrl, shortUrl, user: userId });
+      await newUrl.save();
+
+      res.status(201).json({ originalUrl, short: shortUrl });
+      return;
+    } catch (error) {
+      console.error("Error shortening URL:", error);
+      res.status(500).json({ error: "Something went wrong" });
       return;
     }
-
-    const { originalUrl, customAlias } = parsedData.data;
-    const userId = req.user?.userId;
-
-    if (await Url.exists({ user: userId, originalUrl })) {
-      res.status(409).json({ error: "URL alias already in use" });
-      return;
-    }
-
-    let shortUrl = customAlias || generateRandomWord();
-
-    while (await Url.exists({ user: userId, shortUrl })) {
-      shortUrl = generateRandomWord();
-    }
-
-    const newUrl = new Url({ originalUrl, shortUrl, user: userId });
-    await newUrl.save();
-
-    res.status(201).json({ originalUrl, short: shortUrl });
-    return;
-  } catch (error) {
-    console.error("Error shortening URL:", error);
-    res.status(500).json({ error: "Something went wrong" });
-    return;
   }
-});
+);
 
 router.get("/", authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
@@ -79,5 +83,33 @@ router.get("/", authMiddleware, async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: "Something went wrong" });
   }
 });
+
+router.delete(
+  "/:urlId",
+  authMiddleware,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { urlId } = req.params;
+      const userId = req.user?.userId;
+      const url = await Url.findById(urlId);
+
+      if (!url) {
+        res.status(404).json({ error: "URL not found" });
+        return;
+      }
+
+      if (url.user.toString() !== userId) {
+        res.status(403).json({ error: "Unauthorized to delete this URL" });
+        return;
+      }
+
+      await url.deleteOne();
+
+      res.status(200).json({ message: "url successfully deleted" });
+    } catch (error) {
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  }
+);
 
 export { router as shorten };
