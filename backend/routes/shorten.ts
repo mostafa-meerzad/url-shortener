@@ -8,7 +8,7 @@ import { AuthRequest } from "../types/authRequest";
 const router = express.Router();
 const usedAliases = new Set<string>(); // Create a Set for unique aliases
 
-router.post("/guest", (req, res) => {
+router.post("shorten/guest", (req, res) => {
   const parsedData = urlSchema.safeParse(req.body);
 
   if (!parsedData.success) {
@@ -31,7 +31,7 @@ router.post("/guest", (req, res) => {
   res.status(200).json({ originalUrl, short });
 });
 
-router.post("/", authMiddleware, async (req: AuthRequest, res: Response) => {
+router.post("shorten/", authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const parsedData = urlSchema.safeParse(req.body);
 

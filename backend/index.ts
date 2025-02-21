@@ -15,7 +15,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use("/api/auth", auth);
-app.use("/api/shorten", shorten)
+app.use("/api/urls", shorten)
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to user URL Shortening service 🚀" });
   return;
