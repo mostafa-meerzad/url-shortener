@@ -8,7 +8,7 @@ import { AuthRequest } from "../types/authRequest";
 const router = express.Router();
 const usedAliases = new Set<string>(); // Create a Set for unique aliases
 
-router.post("shorten/guest", (req, res) => {
+router.post("/shorten/guest", (req, res) => {
   const parsedData = urlSchema.safeParse(req.body);
 
   if (!parsedData.success) {
@@ -32,7 +32,7 @@ router.post("shorten/guest", (req, res) => {
 });
 
 router.post(
-  "shorten/",
+  "/shorten",
   authMiddleware,
   async (req: AuthRequest, res: Response) => {
     try {
@@ -106,6 +106,33 @@ router.delete(
       await url.deleteOne();
 
       res.status(200).json({ message: "url successfully deleted" });
+    } catch (error) {
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  }
+);
+
+router.post(
+  "/search",
+  authMiddleware,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const { query } = req.query;
+      console.log(query);
+
+      if (!query || typeof query !== "string") {
+        res.status(400).json({ error: "Query parameter is required" });
+        return;
+      }
+      const urls = await Url.find({
+        user: req.user?.userId,
+        $or: [
+          { originalUrl: { $regex: query, $options: "i" } },
+          { shortUrl: { $regex: query, $options: "i" } },
+        ],
+      }).select({ originalUrl: 1, shortUrl: 1, _id: 1 });
+
+      res.status(200).json({ urls });
     } catch (error) {
       res.status(500).json({ error: "Something went wrong" });
     }
