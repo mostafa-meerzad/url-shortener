@@ -66,4 +66,18 @@ router.post("/", authMiddleware, async (req: AuthRequest, res: Response) => {
   }
 });
 
+router.get("/", authMiddleware, async (req: AuthRequest, res: Response) => {
+  try {
+    const urls = await Url.find({ user: req.user?.userId }).select({
+      originalUrl: 1,
+      shortUrl: 1,
+      _id: 1,
+    });
+
+    res.status(200).json({ urls });
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
 export { router as shorten };
