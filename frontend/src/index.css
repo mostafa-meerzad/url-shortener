@@ -11,3 +11,7 @@
   --color-very-Dark-Violet: hsl(260, 8%, 14%);
   --font-poppins: "Poppins", sans-serif;
 }
+
+body{
+  @apply font-poppins
+}
