@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Url, UrlFormData } from "../types";
+import axios from "axios";
 import classNames from "classnames";
 
 interface ShortenFormProps {
@@ -16,7 +17,17 @@ const ShortenForm: React.FC<ShortenFormProps> = ({ addUrl }) => {
   } = useForm<UrlFormData>();
 
   const onSubmit = async (data: UrlFormData) => {
-    
+    try {
+      const response = await axios.post<Url>(
+        "http://localhost:3000/api/urls/shorten/guest",
+        data
+      );
+      addUrl(response.data);
+      console.log(response.data); 
+      reset();
+    } catch (error) {
+      console.error("Failed to shorten URL", error);
+    }
   };
 
   return (
@@ -30,13 +41,13 @@ const ShortenForm: React.FC<ShortenFormProps> = ({ addUrl }) => {
           {...register("originalUrl", {
             required: "please add a link",
             pattern: {
-              value: /^(https?:\/\/)\w{5}/,
+              value: /^(https?:\/\/)\w{3}/,
               message: "Enter a valid URL starting with http/https",
             },
           })}
           placeholder={"Shorten a link here..."}
           className={classNames({
-            "p-3 bg-white text-darkViolet rounded-md font-medium capitalize tracking-wide focus:outline-cyan":
+            "p-3 bg-white text-darkViolet rounded-md font-medium tracking-wide focus:outline-cyan":
               true,
             "border-2 border-red-400 focus:outline-red-400 placeholder:text-red-300":
               errors.originalUrl,
