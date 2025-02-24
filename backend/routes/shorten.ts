@@ -17,18 +17,18 @@ router.post("/shorten/guest", (req, res) => {
   }
 
   const { originalUrl, customAlias } = parsedData.data;
-  let short = generateRandomWord();
+  let shortUrl = generateRandomWord();
 
   if (customAlias) {
     if (usedAliases.has(customAlias)) {
       res.status(409).json({ error: "Custom alias already in use" });
       return;
     }
-    short = customAlias;
+    shortUrl = customAlias;
   }
-  usedAliases.add(short);
+  usedAliases.add(shortUrl);
 
-  res.status(200).json({ originalUrl, short });
+  res.status(200).json({ originalUrl, shortUrl });
 });
 
 router.post(
