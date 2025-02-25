@@ -4,6 +4,7 @@ import { generateRandomWord } from "../utils/generateRandomWrod";
 import { authMiddleware } from "../middlewares/auth";
 import Url from "../models/Url";
 import { AuthRequest } from "../types/authRequest";
+import { mongo } from "mongoose";
 
 const router = express.Router();
 const usedAliases = new Set<string>(); // Create a Set for unique aliases
@@ -28,7 +29,7 @@ router.post("/shorten/guest", (req, res) => {
   }
   usedAliases.add(shortUrl);
 
-  res.status(200).json({ originalUrl, shortUrl });
+  res.status(200).json({ originalUrl, shortUrl, _id: new mongo.ObjectId() });
 });
 
 router.post(
