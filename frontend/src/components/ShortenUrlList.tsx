@@ -4,12 +4,10 @@ import { Url } from "../types";
 
 interface ShortenUrlListProps {
   urls: Url[];
-  onCopy: (shortUrl: string) => void;
   onDelete: (shortUrl: string) => void;
 }
 const ShortenUrlList: React.FC<ShortenUrlListProps> = ({
   urls,
-  onCopy,
   onDelete,
 }) => {
   return (
@@ -17,7 +15,6 @@ const ShortenUrlList: React.FC<ShortenUrlListProps> = ({
       {urls.map((url) => (
         <ShortenUrlItem
           {...url}
-          onCopy={onCopy}
           onDelete={onDelete}
           key={url._id || url.originalUrl}
         />
