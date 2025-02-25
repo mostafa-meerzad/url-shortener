@@ -23,7 +23,7 @@ const ShortenForm: React.FC<ShortenFormProps> = ({ addUrl }) => {
         data
       );
       addUrl(response.data);
-      console.log(response.data); 
+      // console.log(response.data); 
       reset();
     } catch (error) {
       console.error("Failed to shorten URL", error);

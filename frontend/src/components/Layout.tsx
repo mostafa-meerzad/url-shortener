@@ -8,18 +8,22 @@ import { Toaster } from "react-hot-toast";
 
 const Main = () => {
   const [urls, setUrls] = useState<Url[]>([]);
-
+  const authenticated = false;
   const addUrl = (newUrl: Url) => {
     setUrls((prevUrls) => [newUrl, ...prevUrls]);
   };
   return (
     <div className="max-w-6xl mx-auto pb-20">
-      <Toaster position="top-right"/>
+      <Toaster position="top-right" />
       <Header />
       <main>
         <Hero />
         <ShortenForm addUrl={addUrl} />
-        <ShortenUrlList urls={urls} />
+        <ShortenUrlList
+          urls={urls}
+          setUrls={setUrls}
+          authenticated={authenticated}
+        />
       </main>
     </div>
   );
