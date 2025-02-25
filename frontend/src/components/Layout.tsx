@@ -4,6 +4,7 @@ import Hero from "./Hero";
 import ShortenForm from "./ShortenForm";
 import ShortenUrlList from "./ShortenUrlList";
 import { Url } from "../types";
+import { Toaster } from "react-hot-toast";
 
 const Main = () => {
   const [urls, setUrls] = useState<Url[]>([]);
@@ -13,6 +14,7 @@ const Main = () => {
   };
   return (
     <div className="max-w-6xl mx-auto pb-20">
+      <Toaster position="top-right"/>
       <Header />
       <main>
         <Hero />
