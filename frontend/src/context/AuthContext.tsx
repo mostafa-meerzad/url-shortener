@@ -26,12 +26,13 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = (user: User, token: string) => {
     setUser(user);
     setToken(token);
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", token);
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-
     localStorage.removeItem("user");
     localStorage.removeItem("token");
   };

@@ -3,6 +3,7 @@ import classNames from "classnames";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 interface AuthData {
   name?: string; // Optional for login
@@ -29,7 +30,8 @@ const Input: React.FC<InputProps> = ({ label, error, ...props }) => (
 );
 
 const AuthForm = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const { login } = useAuth();
+  const [isRegister, setIsRegister] = useState(false);
 
   const {
     register,
@@ -40,7 +42,7 @@ const AuthForm = () => {
 
   const onSubmit = async (data: AuthData) => {
     try {
-      const url = isLogin
+      const url = isRegister
         ? "http://localhost:3000/api/auth/register"
         : "http://localhost:3000/api/auth/login";
 
@@ -48,9 +50,9 @@ const AuthForm = () => {
 
       if (response.status >= 200 && response.status < 300) {
         toast.success(
-          isLogin ? "Logged in successfully!" : "Registered successfully!"
+          isRegister ? "Logged in successfully!" : "Registered successfully!"
         );
-        localStorage.setItem("token", response.data.token);
+        login({ name: data.name, email: data.email }, response.data.token);
         reset();
       }
     } catch (error) {
@@ -65,19 +67,19 @@ const AuthForm = () => {
   return (
     <div className="w-[25rem] h-[28rem] flex flex-col items-center justify-center gap-4 rounded-2xl bg-[url(/bg-shorten-desktop.svg)] bg-cover bg-[50%_100%] bg-no-repeat bg-darkViolet">
       <h2 className="text-white text-2xl capitalize mb-4">
-        {isLogin ? "Register" : "Login"}
+        {isRegister ? "Register" : "Login"}
       </h2>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center justify-center gap-4 w-2/3"
       >
-        {isLogin && (
+        {isRegister && (
           <Input
             type="text"
             label="Name..."
             {...register("name", {
-              required: isLogin ? "Name is required!" : false,
+              required: isRegister ? "Name is required!" : false,
             })}
             error={errors.name?.message}
           />
@@ -101,15 +103,15 @@ const AuthForm = () => {
           type="submit"
           className="w-full h-min bg-cyan text-white rounded-md p-2 mt-4"
         >
-          {isLogin ? "Sign Up" : "Login"}
+          {isRegister ? "Sign Up" : "Login"}
         </button>
       </form>
 
       <p
         className="text-white cursor-pointer mt-4"
-        onClick={() => setIsLogin((prev) => !prev)}
+        onClick={() => setIsRegister((prev) => !prev)}
       >
-        {isLogin
+        {isRegister
           ? "Already have an account? Login"
           : "Don't have an account? Register"}
       </p>
