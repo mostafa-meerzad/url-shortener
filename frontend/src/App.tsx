@@ -1,7 +1,12 @@
 import Layout from "./components/Layout";
+import { AuthContextProvider } from "./context/AuthContext";
 
 const App = () => {
-  return <Layout />;
+  return (
+    <AuthContextProvider>
+      <Layout />;
+    </AuthContextProvider>
+  );
 };
 
 export default App;
