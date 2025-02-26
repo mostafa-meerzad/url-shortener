@@ -52,7 +52,8 @@ const AuthForm = () => {
         toast.success(
           isRegister ? "Logged in successfully!" : "Registered successfully!"
         );
-        login({ name: data.name, email: data.email }, response.data.token);
+        const { name, email, token } = response.data;
+        login({ name, email }, token);
         reset();
       }
     } catch (error) {

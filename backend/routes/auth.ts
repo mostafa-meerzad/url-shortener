@@ -32,7 +32,7 @@ router.post("/register", async (req, res) => {
     process.env.JWT_SECRET as string
   );
 
-  res.status(201).send({ token });
+  res.status(201).send({ token, user: newUser });
 });
 
 router.post("/login", async (req, res) => {
@@ -67,7 +67,7 @@ router.post("/login", async (req, res) => {
       process.env.JWT_SECRET as string
     );
 
-    res.status(200).send({ token });
+    res.status(200).send({ token, user: existingUser });
   } catch (error) {
     console.error("Login error:", error);
     res
