@@ -48,7 +48,7 @@ router.post(
       const userId = req.user?.userId;
 
       if (await Url.exists({ user: userId, originalUrl })) {
-        res.status(409).json({ error: "URL alias already in use" });
+        res.status(409).json({ error: "URL already exists" });
         return;
       }
 
@@ -61,7 +61,7 @@ router.post(
       const newUrl = new Url({ originalUrl, shortUrl, user: userId });
       await newUrl.save();
 
-      res.status(201).json({ originalUrl, short: shortUrl });
+      res.status(201).json({ originalUrl, shortUrl });
       return;
     } catch (error) {
       console.error("Error shortening URL:", error);
