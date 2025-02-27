@@ -1,22 +1,47 @@
+import { useState } from "react";
 import { logo } from "../assets/images";
-import NavLink, { LinkItem } from "./NavLink";
+import { useAuth } from "../context/AuthContext";
+import AuthForm from "./AuthForm";
 
 const Header = () => {
-  const links: LinkItem[] = [
-    { label: "login", href: "/" },
-    { label: "sign up", href: "/", variant: "primary" },
-  ];
+  const { isLoggedIn, logout, user } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const handleModalClose = () => {
+    setShowAuthModal(false);
+  };
 
   return (
-    <header className="p-6 md:p-10">
-      <nav className="flex justify-between items-center ">
-        <img src={logo} alt="URL Shortener" className=" h-7 " />
-        <ul className="flex gap-3">
-          {links.map((link) => (
-            <NavLink {...link} key={link.label} />
-          ))}
-        </ul>
-      </nav>
+    <header className="flex justify-between items-center p-6 md:p-10">
+      <img src={logo} alt="URL Shortener" className=" h-7 " />
+      <div className="flex gap-3">
+        {isLoggedIn ? (
+          <div className="relative flex justify-center items-center gap-4 group">
+            <span className="text-darkViolet text-lg font-medium capitalize ">
+              {user?.name}
+            </span>
+
+            <button
+              onClick={logout}
+              className="  bg-cyan text-white px-4 py-1.5 capitalize rounded-3xl"
+            >
+              logout
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setShowAuthModal(true)}
+            className=" bg-cyan text-white px-4 py-1.5 capitalize rounded-3xl"
+          >
+            login
+          </button>
+        )}
+      </div>
+
+      {showAuthModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-veryDarkBlue/50  z-50">
+          <AuthForm onModalClose={handleModalClose} />
+        </div>
+      )}
     </header>
   );
 };
