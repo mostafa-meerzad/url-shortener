@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
+import { IoIosClose } from "react-icons/io";
 
 interface AuthData {
   name?: string; // Optional for login
@@ -29,7 +30,10 @@ const Input: React.FC<InputProps> = ({ label, error, ...props }) => (
   </div>
 );
 
-const AuthForm = () => {
+interface AuthFormProps {
+  onModalClose: () => void;
+}
+const AuthForm: React.FC<AuthFormProps> = ({ onModalClose }) => {
   const { login } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
 
@@ -52,9 +56,10 @@ const AuthForm = () => {
         toast.success(
           isRegister ? "Logged in successfully!" : "Registered successfully!"
         );
-        const { name, email, token } = response.data;
-        login({ name, email }, token);
+        const { user, token } = response.data;
+        login({ name: user.name, email: user.email }, token);
         reset();
+        onModalClose();
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -66,7 +71,14 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="w-[25rem] h-[28rem] flex flex-col items-center justify-center gap-4 rounded-2xl bg-[url(/bg-shorten-desktop.svg)] bg-cover bg-[50%_100%] bg-no-repeat bg-darkViolet">
+    <div className="w-[25rem] h-[28rem] flex flex-col items-center justify-center gap-4 rounded-2xl bg-[url(/bg-shorten-desktop.svg)] bg-cover bg-[50%_100%] bg-no-repeat bg-darkViolet relative">
+      <button
+        onClick={onModalClose}
+        className=" text-white absolute top-4 right-4 "
+      >
+        <IoIosClose size={"40px"} />
+      </button>
+
       <h2 className="text-white text-2xl capitalize mb-4">
         {isRegister ? "Register" : "Login"}
       </h2>
