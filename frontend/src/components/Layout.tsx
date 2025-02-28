@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 
 const Main = () => {
   return (
-    <div className="max-w-6xl mx-auto pb-20">
+    <div className="max-w-7xl mx-auto pb-20 overflow-x-hidden">
       <Toaster position="top-right" />
       <Header />
       <main>

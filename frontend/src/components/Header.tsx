@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center p-6 md:p-10">
+    <header className="flex justify-between items-center p-8 md:px-16">
       <img src={logo} alt="URL Shortener" className=" h-7 " />
       <div className="flex gap-3">
         {isLoggedIn ? (

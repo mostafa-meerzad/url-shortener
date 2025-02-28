@@ -30,7 +30,7 @@ const ShortenUrlList = () => {
   };
 
   return (
-    <ul className="flex flex-col gap-5 px-6 py-8 md:px-10">
+    <ul className="grid grid-cols-1 lg:grid-cols-2 gap-5 px-8 py-8 md:px-16">
       {urls.map((url) => (
         <ShortenUrlItem
           {...url}

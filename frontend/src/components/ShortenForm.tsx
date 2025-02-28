@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import { Url, UrlFormData } from "../types";
 import axios from "axios";
@@ -13,7 +12,7 @@ const ShortenForm = () => {
     reset,
     formState: { errors },
   } = useForm<UrlFormData>();
-  const { isLoggedIn, token, urls, setUrls } = useAuth();
+  const { isLoggedIn, token, setUrls } = useAuth();
 
   const onSubmit = async (data: UrlFormData) => {
     const url = isLoggedIn
@@ -25,7 +24,7 @@ const ShortenForm = () => {
         isLoggedIn && token ? { authorization: `Bearer ${token}` } : {};
       const response = await axios.post<Url>(url, data, { headers });
 
-      setUrls(prevUrls => [response.data, ...prevUrls]);
+      setUrls((prevUrls) => [response.data, ...prevUrls]);
       toast.success("URL shortened successfully!");
       reset();
     } catch (error) {
@@ -38,34 +37,36 @@ const ShortenForm = () => {
   };
 
   return (
-    <div className="w-full px-6 md:px-10">
+    <div className="w-full px-8 md:px-16">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col p-7 gap-5 bg-[url(bg-shorten-mobile.svg)] bg-no-repeat bg-[100%_0%] bg-darkViolet rounded-2xl"
+        className="flex flex-col md:flex-row md:justify-end p-8 gap-6 bg-[url(bg-shorten-mobile.svg)] md:bg-[url(bg-shorten-desktop.svg)] bg-no-repeat bg-[100%_0%] md:bg-center md:bg-cover bg-darkViolet rounded-2xl md:px-14 md:py-12"
       >
-        <input
-          type="text"
-          {...register("originalUrl", {
-            required: "Please add a link",
-            pattern: {
-              value: /^(https?:\/\/)\w{3}/,
-              message: "Enter a valid URL starting with http/https",
-            },
-          })}
-          placeholder="Shorten a link here..."
-          className={classNames(
-            "p-3 bg-white text-darkViolet rounded-md font-medium tracking-wide focus:outline-cyan",
-            {
-              "border-2 border-red-400 focus:outline-red-400 placeholder:text-red-300":
-                errors.originalUrl,
-            }
+        <div className="flex flex-col flex-1/2 relative">
+          <input
+            type="text"
+            {...register("originalUrl", {
+              required: "Please add a link",
+              pattern: {
+                value: /^(https?:\/\/)\w{3}/,
+                message: "Enter a valid URL starting with http/https",
+              },
+            })}
+            placeholder="Shorten a link here..."
+            className={classNames(
+              "p-3 bg-white text-darkViolet rounded-md font-medium tracking-wide focus:outline-cyan ",
+              {
+                "border-2 border-red-400 focus:outline-red-400 placeholder:text-red-300":
+                  errors.originalUrl,
+              }
+            )}
+          />
+          {errors.originalUrl && (
+            <p className="text-red-400 text-sm italic absolute -bottom-6">
+              {errors.originalUrl.message}
+            </p>
           )}
-        />
-        {errors.originalUrl && (
-          <p className="text-red-400 text-sm italic">
-            {errors.originalUrl.message}
-          </p>
-        )}
+        </div>
 
         <button
           type="submit"
