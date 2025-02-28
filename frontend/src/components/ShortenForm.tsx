@@ -18,10 +18,12 @@ const ShortenForm = () => {
   const [isCustomAlias, setIsCustomAlias] = useState<boolean>(false);
 
   const onSubmit = async (data: UrlFormData) => {
+    if(!isCustomAlias){
+      delete data.customAlias
+    }
     const url = isLoggedIn
       ? "http://localhost:3000/api/urls/shorten"
       : "http://localhost:3000/api/urls/shorten/guest";
-    console.log("form data, ", data);
 
     try {
       const headers =
@@ -74,19 +76,29 @@ const ShortenForm = () => {
         </div>
 
         {isCustomAlias && (
-          <div>
+          <div className="flex flex-col flex-1/2 relative">
             <input
               type="text"
-              {...register("customAlias")}
+              {...register("customAlias", {
+                pattern: {
+                  value: /\w{3}/,
+                  message: "Enter a valid string",
+                },
+              })}
               placeholder="Custom alias"
               className={classNames(
                 "p-3 bg-white text-darkViolet rounded-md font-medium tracking-wide focus:outline-cyan w-full",
                 {
                   "border-2 border-red-400 focus:outline-red-400 placeholder:text-red-300":
-                    errors.originalUrl,
+                    errors.customAlias,
                 }
               )}
             />
+            {errors.customAlias && (
+              <p className="text-red-400 text-sm italic absolute -bottom-6">
+                {errors.customAlias.message}
+              </p>
+            )}
           </div>
         )}
         <div className="flex gap-2">
