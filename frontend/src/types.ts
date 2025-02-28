@@ -1,5 +1,6 @@
 export interface UrlFormData {
   originalUrl: string;
+  customAlias: string | undefined;
 }
 
 export interface Url {

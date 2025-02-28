@@ -4,6 +4,7 @@ import axios from "axios";
 import classNames from "classnames";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 const ShortenForm = () => {
   const {
@@ -14,10 +15,13 @@ const ShortenForm = () => {
   } = useForm<UrlFormData>();
   const { isLoggedIn, token, setUrls } = useAuth();
 
+  const [isCustomAlias, setIsCustomAlias] = useState<boolean>(false);
+
   const onSubmit = async (data: UrlFormData) => {
     const url = isLoggedIn
       ? "http://localhost:3000/api/urls/shorten"
       : "http://localhost:3000/api/urls/shorten/guest";
+    console.log("form data, ", data);
 
     try {
       const headers =
@@ -27,6 +31,7 @@ const ShortenForm = () => {
       setUrls((prevUrls) => [response.data, ...prevUrls]);
       toast.success("URL shortened successfully!");
       reset();
+      setIsCustomAlias(false);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         toast.error(error.response.data.error || "Failed to shorten URL.");
@@ -68,12 +73,37 @@ const ShortenForm = () => {
           )}
         </div>
 
-        <button
-          type="submit"
-          className="p-3 bg-cyan text-white rounded-md font-semibold capitalize tracking-wide"
-        >
-          Shorten it!
-        </button>
+        {isCustomAlias && (
+          <div>
+            <input
+              type="text"
+              {...register("customAlias")}
+              placeholder="Custom alias"
+              className={classNames(
+                "p-3 bg-white text-darkViolet rounded-md font-medium tracking-wide focus:outline-cyan w-full",
+                {
+                  "border-2 border-red-400 focus:outline-red-400 placeholder:text-red-300":
+                    errors.originalUrl,
+                }
+              )}
+            />
+          </div>
+        )}
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            className="p-3 bg-cyan text-white rounded-md font-semibold capitalize tracking-wide w-full"
+          >
+            Shorten it!
+          </button>
+          <button
+            onClick={() => setIsCustomAlias(!isCustomAlias)}
+            type="button"
+            className="p-3 ring-offset-slate-300 bg-contain border text-white rounded-md font-semibold capitalize tracking-wide"
+          >
+            custom
+          </button>
+        </div>
       </form>
     </div>
   );
