@@ -6,18 +6,14 @@ import classNames from "classnames";
 import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 
-interface ShortenFormProps {
-  addUrl: (newUrl: Url) => void;
-}
-
-const ShortenForm: React.FC<ShortenFormProps> = ({ addUrl }) => {
+const ShortenForm = () => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<UrlFormData>();
-  const { isLoggedIn, token } = useAuth();
+  const { isLoggedIn, token, urls, setUrls } = useAuth();
 
   const onSubmit = async (data: UrlFormData) => {
     const url = isLoggedIn
@@ -29,7 +25,7 @@ const ShortenForm: React.FC<ShortenFormProps> = ({ addUrl }) => {
         isLoggedIn && token ? { authorization: `Bearer ${token}` } : {};
       const response = await axios.post<Url>(url, data, { headers });
 
-      addUrl(response.data);
+      setUrls(prevUrls => [response.data, ...prevUrls]);
       toast.success("URL shortened successfully!");
       reset();
     } catch (error) {

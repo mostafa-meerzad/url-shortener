@@ -1,37 +1,27 @@
-import React from "react";
 import ShortenUrlItem from "./ShortenUrlItem";
-import { Url } from "../types";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
-interface ShortenUrlListProps {
-  urls: Url[];
-  setUrls: React.Dispatch<React.SetStateAction<Url[]>>;
-  authenticated: boolean;
-}
-const ShortenUrlList: React.FC<ShortenUrlListProps> = ({
-  urls,
-  setUrls,
-  authenticated,
-}) => {
+const ShortenUrlList = () => {
+  const { urls, setUrls, isLoggedIn, token } = useAuth();
+
   const handleDelete = async (id: string) => {
-    // find the URL we want to remove  for (restoring on error)
     const urlToDelete = urls.find((url) => url._id === id);
     if (!urlToDelete) return;
 
-    // optimistically remove from state
     setUrls((prevUrls) => prevUrls.filter((url) => url._id !== id));
 
-    // if the user is logged in, call the backend
-    if (authenticated) {
+    if (isLoggedIn) {
       try {
-        await axios.delete(`http://localhost:3000/api/urls/${id}`);
+        await axios.delete(`http://localhost:3000/api/urls/${id}`, {
+          headers: { authorization: `Bearer ${token}` },
+        });
         toast.success("URL deleted successfully!");
       } catch (error) {
         console.log("something went wrong, ", error);
         toast.error("cant delete the url!");
 
-        // restore the deleted URL if the request fails
         setUrls((prevUrls) => [urlToDelete, ...prevUrls]);
       }
     } else {
