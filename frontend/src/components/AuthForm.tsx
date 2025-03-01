@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { IoIosClose } from "react-icons/io";
 
+const baseUrl = import.meta.env.VITE_API_URL
 interface AuthData {
   name?: string; // Optional for login
   email: string;
@@ -47,8 +48,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onModalClose }) => {
   const onSubmit = async (data: AuthData) => {
     try {
       const url = isRegister
-        ? "http://localhost:3000/api/auth/register"
-        : "http://localhost:3000/api/auth/login";
+        ? `${baseUrl}/auth/register`
+        : `${baseUrl}/auth/login`;
 
       const response = await axios.post(url, data);
 

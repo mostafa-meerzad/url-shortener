@@ -6,6 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import { useState } from "react";
 
+const baseUrl = import.meta.env.VITE_API_URL
 const ShortenForm = () => {
   const {
     register,
@@ -22,8 +23,8 @@ const ShortenForm = () => {
       delete data.customAlias;
     }
     const url = isLoggedIn
-      ? "http://localhost:3000/api/urls/shorten"
-      : "http://localhost:3000/api/urls/shorten/guest";
+      ? `${baseUrl}/urls/shorten`
+      : `${baseUrl}/urls/shorten/guest`;
 
     try {
       const headers =

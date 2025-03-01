@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { Url } from "../types";
 import axios from "axios";
 
+const baseUrl = import.meta.env.VITE_API_URL
+
 interface User {
   name: string;
   email: string;
@@ -31,7 +33,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchUserUrls = async (userToken: string) => {
     console.log("fetching urls");
     try {
-      const {data} = await axios.get("http://localhost:3000/api/urls", {
+      const {data} = await axios.get(`${baseUrl}/urls`, {
         headers: { authorization: `Bearer ${userToken}` },
       });
       console.log("server response ", data);

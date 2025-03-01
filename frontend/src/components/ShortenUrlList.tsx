@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 
+const baseUrl = import.meta.env.VITE_API_URL;
+
 const ShortenUrlList = () => {
   const { urls, setUrls, isLoggedIn, token } = useAuth();
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -16,7 +18,7 @@ const ShortenUrlList = () => {
 
     if (isLoggedIn) {
       try {
-        await axios.delete(`http://localhost:3000/api/urls/${id}`, {
+        await axios.delete(`${baseUrl}/urls/${id}`, {
           headers: { authorization: `Bearer ${token}` },
         });
         toast.success("URL deleted successfully!");
