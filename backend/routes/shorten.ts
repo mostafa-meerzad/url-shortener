@@ -2,7 +2,7 @@ import express, { Response } from "express";
 import { urlSchema } from "../schemas/urlSchema";
 import { generateRandomWord } from "../utils/generateRandomWrod";
 import { authMiddleware } from "../middlewares/auth";
-import Url from "../models/Url";
+import Url from "../models/url";
 import { AuthRequest } from "../types/authRequest";
 import { mongo } from "mongoose";
 
