@@ -5,7 +5,7 @@ import { shorten } from "./routes/shorten";
 import cors from "cors";
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
 // Handle invalid JSON Objects
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
