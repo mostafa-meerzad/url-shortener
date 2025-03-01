@@ -18,8 +18,8 @@ const ShortenForm = () => {
   const [isCustomAlias, setIsCustomAlias] = useState<boolean>(false);
 
   const onSubmit = async (data: UrlFormData) => {
-    if(!isCustomAlias){
-      delete data.customAlias
+    if (!isCustomAlias) {
+      delete data.customAlias;
     }
     const url = isLoggedIn
       ? "http://localhost:3000/api/urls/shorten"
@@ -44,7 +44,7 @@ const ShortenForm = () => {
   };
 
   return (
-    <div className="w-full px-8 md:px-16">
+    <div className="w-full px-8 md:px-16 ">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col md:flex-row md:justify-end p-8 gap-6 bg-[url(bg-shorten-mobile.svg)] md:bg-[url(bg-shorten-desktop.svg)] bg-no-repeat bg-[100%_0%] md:bg-center md:bg-cover bg-darkViolet rounded-2xl md:px-14 md:py-12"
