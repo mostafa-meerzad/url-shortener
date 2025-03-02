@@ -1,6 +1,6 @@
 import express from "express";
 import { userRegisterSchema, userLoginSchema } from "../schemas/userSchema";
-import User from "../models/temp2";
+import User from "../models/User";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
