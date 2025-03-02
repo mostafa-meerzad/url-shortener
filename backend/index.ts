@@ -7,7 +7,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(cors({
+  origin: [process.env.CLIENT_URL!],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
 // Handle invalid JSON Objects
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
