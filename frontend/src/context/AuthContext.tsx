@@ -33,7 +33,7 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const fetchUserUrls = async (userToken: string) => {
     console.log("fetching urls");
     try {
-      const {data} = await axios.get(`${baseUrl}/urls`, {
+      const {data} = await axios.get(`${baseUrl}/api/urls`, {
         headers: { authorization: `Bearer ${userToken}` },
       });
       console.log("server response ", data);

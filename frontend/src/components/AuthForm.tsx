@@ -48,8 +48,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ onModalClose }) => {
   const onSubmit = async (data: AuthData) => {
     try {
       const url = isRegister
-        ? `${baseUrl}/auth/register`
-        : `${baseUrl}/auth/login`;
+        ? `${baseUrl}/api/auth/register`
+        : `${baseUrl}/api/auth/login`;
 
       const response = await axios.post(url, data);
 
@@ -72,7 +72,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onModalClose }) => {
   };
 
   return (
-    <div className="w-[25rem] h-[28rem] flex flex-col items-center justify-center gap-4 rounded-2xl bg-[url(/bg-shorten-desktop.svg)] bg-cover bg-[50%_100%] bg-no-repeat bg-darkViolet relative">
+    <div className="w-[25rem] h-[28rem] flex flex-col items-center justify-center gap-4 rounded-2xl bg-[url(assets/images/bg-shorten-desktop.svg)] bg-cover bg-[50%_100%] bg-no-repeat bg-darkViolet relative">
       <button
         onClick={onModalClose}
         className=" text-white absolute top-4 right-4 "

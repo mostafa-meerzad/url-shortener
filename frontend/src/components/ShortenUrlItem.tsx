@@ -41,11 +41,11 @@ const ShortenUrlItem: React.FC<ShortenUrlItemProps> = ({
 
   return (
     <li
-      className={`flex justify-between p-6 rounded-xl bg-[url(bg-shorten-desktop.svg)] bg-no-repeat bg-cover bg-right bg-darkViolet ${
+      className={`flex justify-between p-6 rounded-xl bg-[url(assets/images/bg-shorten-desktop.svg)] bg-no-repeat bg-cover bg-right bg-darkViolet ${
         isCopied ? " shadow-lg shadow-cyan" : ""
       }`}
     >
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 max-w-2/3 overflow-hidden break-words">
         <p className="text-gray-300">{originalUrl}</p>
         <p className="text-cyan font-medium text-lg">{shortUrl}</p>
       </div>

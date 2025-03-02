@@ -23,8 +23,8 @@ const ShortenForm = () => {
       delete data.customAlias;
     }
     const url = isLoggedIn
-      ? `${baseUrl}/urls/shorten`
-      : `${baseUrl}/urls/shorten/guest`;
+      ? `${baseUrl}/api/urls/shorten`
+      : `${baseUrl}/api/urls/shorten/guest`;
 
     try {
       const headers =
@@ -37,6 +37,7 @@ const ShortenForm = () => {
       setIsCustomAlias(false);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
+        console.log(error)
         toast.error(error.response.data.error || "Failed to shorten URL.");
       } else {
         toast.error("Unexpected error occurred.");
@@ -48,7 +49,7 @@ const ShortenForm = () => {
     <div className="w-full px-8 md:px-16 ">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col md:flex-row md:justify-end p-8 gap-6 bg-[url(bg-shorten-mobile.svg)] md:bg-[url(bg-shorten-desktop.svg)] bg-no-repeat bg-[100%_0%] md:bg-center md:bg-cover bg-darkViolet rounded-2xl md:px-14 md:py-12"
+        className="flex flex-col md:flex-row md:justify-end p-8 gap-6 bg-[url(assets/images/bg-shorten-mobile.svg)] md:bg-[url(assets/images/bg-shorten-desktop.svg)] bg-no-repeat bg-[100%_0%] md:bg-center md:bg-cover bg-darkViolet rounded-2xl md:px-14 md:py-12"
       >
         <div className="flex flex-col flex-1/2 relative">
           <input
@@ -77,7 +78,7 @@ const ShortenForm = () => {
         </div>
 
         {isCustomAlias && (
-          <div className="flex flex-col flex-1/2 relative">
+          <div className="flex flex-col relative ">
             <input
               type="text"
               {...register("customAlias", {

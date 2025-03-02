@@ -18,7 +18,7 @@ const ShortenUrlList = () => {
 
     if (isLoggedIn) {
       try {
-        await axios.delete(`${baseUrl}/urls/${id}`, {
+        await axios.delete(`${baseUrl}/api/urls/${id}`, {
           headers: { authorization: `Bearer ${token}` },
         });
         toast.success("URL deleted successfully!");
