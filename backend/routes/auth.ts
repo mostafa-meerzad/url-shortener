@@ -10,6 +10,7 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   const parsedData = userRegisterSchema.safeParse(req.body);
+try {
 
   if (!parsedData.success) {
     res.status(400).json(parsedData.error.formErrors);
@@ -33,6 +34,10 @@ router.post("/register", async (req, res) => {
   );
 
   res.status(201).send({ token, user: newUser });
+} catch (error) {
+  res.status(500).json({message: "something went wrong"})
+ console.log(error) 
+}
 });
 
 router.post("/login", async (req, res) => {
